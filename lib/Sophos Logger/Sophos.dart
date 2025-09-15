@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart' as xml;
 import 'package:xml/xml.dart' as xml;
 import 'package:connectivity_plus/connectivity_plus.dart'; // Import connectivity
 import 'package:network_info_plus/network_info_plus.dart';
@@ -72,6 +70,7 @@ class SophosLogger {
 
   Future<String> login() async {
     // 1. Check for Wi-Fi connection first
+    final ts = _timestamp();
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (!connectivityResult.contains(ConnectivityResult.wifi)) {
       print("❌ Wi-Fi is not connected. Aborting login.");
@@ -81,6 +80,13 @@ class SophosLogger {
     // Optional: Log the Wi-Fi IP to confirm you're on the right network
     final wifiIP = await NetworkInfo().getWifiIP();
     print("✅ Connected to Wi-Fi with IP: $wifiIP");
+
+
+
+    checkAlive();
+
+
+
 
     // 2. Proceed with the login request (your existing code)
     final url = Uri.parse("$baseUrl/login.xml");
@@ -151,30 +157,16 @@ class SophosLogger {
   // }
   
   /// ✅ Check if user session is alive
-  // Future<bool> checkAlive() async {
-  //   final ts = _timestamp();
-  //   final liveUrl = Uri.parse(
-  //       "$baseUrl/live?mode=192&username=$username&a=$ts&producttype=0");
+  void checkAlive() async {
+    final ts = _timestamp();
+    final liveUrl = Uri.parse(
+          "$baseUrl/live?mode=192&username=$username&a=$ts&producttype=0");
 
-  //   try {
-  //     final res = await http.get(liveUrl);
-  //     print(res.body);
-  //     if (res.statusCode == 200) {
-  //       // You can also inspect res.body if needed
-  //       if(res.body.contains("LIVE") ) {
-  //         print("Session is not alive");
-  //         return false;
-  //       } else {
-  //         print("Session is  alive");
-  //         return true;
-  //       }
-        
-  //     }
-  //     return false;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+      final res1 = await http.get(liveUrl);
+
+      print("==============check alive before check =================");
+      print(res1.body); 
+  }
 
   /// 🔒 LOGOUT
   Future<String> logout() async {

@@ -33,6 +33,8 @@ class MainApp extends StatelessWidget {
 }
 
 class AppEntryPoint extends StatelessWidget {
+  const AppEntryPoint({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
